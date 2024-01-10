@@ -1,0 +1,83 @@
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+android {
+    ndkVersion rootProject.ext.ndkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdkVersion
+
+    namespace "com.playspot"
+    defaultConfig {
+        applicationId "com.playspot"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+        // You should define a release signing configuration for production builds
+        // and provide the necessary keystore information.
+        // Example:
+        // release {
+        //     storeFile file('your-release-key.keystore')
+        //     storePassword 'your-release-key-password'
+        //     keyAlias 'your-key-alias'
+        //     keyPassword 'your-key-password'
+        // }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // Uncomment the following lines if you want to use Proguard for release builds
+            // minifyEnabled enableProguardInReleaseBuilds
+            // proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
+            // Specify your release signing configuration
+            // signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    // The version of react-native is set by the React Native Gradle Plugin
+    implementation("com.facebook.react:react-android")
+    implementation("com.facebook.react:flipper-integration")
+
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
+
+    // Additional dependencies can be added here
+}
+
+project.ext.react = [
+    enableHermes: true,
+    // Uncomment and customize the following lines if needed
+    // root: "../../",
+    // reactNativeDir: file("../node_modules/react-native"),
+    // codegenDir: file("../node_modules/@react-native/codegen"),
+    // cliFile: file("../node_modules/react-native/cli.js"),
+    // debuggableVariants: ["liteDebug", "prodDebug"],
+    // nodeExecutableAndArgs: ["node"],
+    // bundleCommand: "ram-bundle",
+    // bundleConfig: file("../rn-cli.config.js"),
+    // bundleAssetName: "MyApplication.android.bundle",
+    // entryFile: file("../js/MyApplication.android.js"),
+    // extraPackagerArgs: [],
+    // hermesCommand: "$rootDir/my-custom-hermesc/bin/hermesc",
+    // hermesFlags: ["-O", "-output-source-map"]
+]
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesAppBuildGradle(project)
